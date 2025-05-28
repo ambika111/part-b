@@ -1,1 +1,1 @@
-# part-b
+echo "jenkins is cicd tool"
