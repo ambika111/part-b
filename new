@@ -1,0 +1,54 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Cloning repository...'
+                git url: 'https://github.com/your-username/your-repo.git', branch: 'main'
+            }
+        }
+
+        stage('Build/Setup') {
+            steps {
+                echo 'Installing dependencies...'
+                // Example for a Node.js project
+                sh 'npm install'
+                // Uncomment based on tech stack:
+                // sh 'pip install -r requirements.txt'
+                // sh 'mvn clean install'
+            }
+        }
+
+        stage('Testing') {
+            steps {
+                echo 'Running tests...'
+                // Example for a Node.js project
+                sh 'npm test'
+                // sh 'pytest'
+                // sh 'mvn test'
+            }
+        }
+
+        stage('Notify') {
+            steps {
+                script {
+                    if (currentBuild.result == null || currentBuild.result == 'SUCCESS') {
+                        echo '✅ Build and tests passed successfully!'
+                    } else {
+                        echo '❌ Build or tests failed.'
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        failure {
+            echo 'Pipeline failed. Please check logs for details.'
+        }
+        success {
+            echo 'Pipeline completed successfully.'
+        }
+    }
+}
